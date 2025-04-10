@@ -1,5 +1,23 @@
 <?php
 
+//Definiamo un trait
+trait RatingTrait {
+    public $rating;
+
+    //metodo per assegnare un voto
+    public function setRating($valore) {
+        if($valore >= 0 && $valore <= 5) {
+            $this->rating = $valore;
+        } else {
+            echo "Il valore deve essere tra 0 e 5. <br>";
+        }
+    }
+
+    //Metodo per ottenere il voto
+    public function getRating() {
+        return $this->rating ?? "Nessun voto assegnato";
+    }
+}
 class Genre {
     public $nome;
 
@@ -9,6 +27,8 @@ class Genre {
 }
 
 class Movie {
+
+    use RatingTrait;
 
     public $nome;
     public $anno;
@@ -29,7 +49,7 @@ class Movie {
 
         //Creiamo una stringa con tutti i generi 
         $generiStr = implode(", ", array_map(fn($g) => $g->nome, $this->generi));
-        return "{$this->nome} ({$this->anno}) - Durata: {$this->durata} - Genere: {$generiStr}";
+        return "{$this->nome} ({$this->anno}) - Durata: {$this->durata} - Genere: {$generiStr} - Rating: " . $this->getRating();
     }
 }
 
@@ -44,6 +64,10 @@ $drammatico = new Genre("Drammatico");
 //nuovo film
 $inception = new Movie("Inception", 2010, "148 min", [$fantascienza, $azione]);
 $titanic = new Movie("Titanic", 1997, "195 min", [$drammatico]);
+
+
+//Assegnamo un voto al film usando il trait
+$inception->setRating(5);
 
 //riempio gli attributi della classe
 // $inception->nome = "Inception";
